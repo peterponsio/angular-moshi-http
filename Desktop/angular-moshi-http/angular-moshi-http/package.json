@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "pack-moshi": "cd dist/angular-moshi-http && npm pack",
+    "build-moshi": "ng build"
   },
   "private": true,
   "dependencies": {

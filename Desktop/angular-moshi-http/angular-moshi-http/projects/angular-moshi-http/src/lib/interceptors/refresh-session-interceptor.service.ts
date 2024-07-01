@@ -70,7 +70,7 @@ export class RefreshSessionInterceptorService implements HttpInterceptor {
   }
 
   private isPublicEndPoint(): boolean {
-    return this.moshiMoshi.isAuthCall.value
+    return this.storageManager.isAuthCall.value
   }
 
 }
