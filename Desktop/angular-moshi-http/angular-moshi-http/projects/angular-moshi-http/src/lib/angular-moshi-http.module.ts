@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AngularMoshiHttpComponent } from './angular-moshi-http.component';
+import { InterceptorsModule } from './interceptors/interceptors.module';
 
 
 
@@ -8,6 +9,7 @@ import { AngularMoshiHttpComponent } from './angular-moshi-http.component';
     AngularMoshiHttpComponent
   ],
   imports: [
+    InterceptorsModule
   ],
   exports: [
     AngularMoshiHttpComponent

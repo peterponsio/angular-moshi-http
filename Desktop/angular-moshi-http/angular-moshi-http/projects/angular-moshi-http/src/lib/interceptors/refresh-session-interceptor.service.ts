@@ -1,29 +1,28 @@
 import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { BehaviorSubject, from, Observable, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
-
-import { LocalStorageService } from '../utils/localStorage.service';
-
-import { environment } from 'src/environments/environment';
+import { SessionManagerService } from '../storage/session-manager.service';
+import { SessionModel } from '../entities/session.model';
+import { MoshiMoshi } from '../MoshiMoshi';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RefreshSessionInterceptorService implements HttpInterceptor {
 
-  private refreshTokenSubject = new BehaviorSubject<string | null>(null)
   private publicEndpoints = []
 
   constructor(
-    private localStorage: LocalStorageService,
-    private http:HttpClient
+    private storageManager: SessionManagerService,
+    private http:HttpClient,
+    private moshiMoshi: MoshiMoshi
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // si es una llamada de assets se hace un handle y se omite 
-    if (req.url.includes('assets') || this.isPublicEndPoint(req)) {
+    if (this.isPublicEndPoint()) {
       return next.handle(req)
     }
 
@@ -34,25 +33,26 @@ export class RefreshSessionInterceptorService implements HttpInterceptor {
           .pipe(
             switchMap((newToken) => {
               return next.handle(req.clone({
-                headers: req.headers.set("Authorization", `Bearer ${newToken.access_token}`)
+                headers: req.headers.set("Authorization", `Bearer ${newToken.accessToken}`)
               }))
             }),
           )
         }
+        return throwError(error);
       })
       )
+      
   }
   
   async refreshCall(): Promise<any>{
 
-    const authInfo = await this.localStorage.getAuthInfo()
-    const endpoint = `${environment.baseUrl.PROD}/auth/token`
-
+    const authInfo: SessionModel  = this.storageManager.getSessionInfo()
+    const endpoint = `/auth/log-in`
+    
+    
     const body = {
-      refresh_token: authInfo.refresh_token,
-      grant_type: 'refresh_token',
-      client_id: environment.appData.client_id,
-      client_secret:  environment.appData.client_secret
+      email: '',
+      password: ''
     }
     return new Promise((resolve, reject) => {
       this.http.post<any>(endpoint,body)
@@ -61,8 +61,7 @@ export class RefreshSessionInterceptorService implements HttpInterceptor {
         )
       )
       .subscribe(response => {
-        this.localStorage.setAuthInfo(response) 
-        this.refreshTokenSubject.next(response.access_token)
+        this.storageManager.setSessionInfo(response) 
         resolve(response)
       }, err => {
         reject(err)
@@ -70,10 +69,8 @@ export class RefreshSessionInterceptorService implements HttpInterceptor {
     });
   }
 
-  private isPublicEndPoint(request: HttpRequest<any>) {
-    return this.publicEndpoints.find((ep) => {
-        return request.method === ep.method && request.url.includes(ep.endpoint);
-    });
+  private isPublicEndPoint(): boolean {
+    return this.moshiMoshi.isAuthCall.value
   }
 
 }
