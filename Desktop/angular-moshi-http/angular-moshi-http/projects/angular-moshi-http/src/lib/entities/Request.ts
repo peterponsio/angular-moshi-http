@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 
-export interface Request{
+export interface RequestModel {
     method: keyof HttpClient,
     url: string,
     body: unknown,

@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
 import { Observable } from "rxjs";
+import { RequestModel } from "../entities/Request";
 
 @Injectable()
 export class Request {
@@ -10,11 +11,9 @@ export class Request {
   constructor(protected injector: Injector) {}
 
   doRequest<T>(
-    method: keyof HttpClient,
-    url: string,
-    body: unknown = undefined,
-    params?: keyof HttpParams
+    req: RequestModel
   ): Observable<T> {
-    return this.http.request<T>(method, url, { body });
+    const body = req.body
+    return this.http.request<T>(req.method, req.url, { body });
   }
 }
