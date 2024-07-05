@@ -4,13 +4,14 @@ import { MoshiMoshiAbstract } from './MoshiMoshiAbstract';
 import { RequestModel } from './entities/Request';
 import { SessionManagerService } from './storage/session-manager.service';
 import { Request } from './http/request';
+import { AuthenticatorImpl } from './AuthenticatorImpl';
 
 export class MoshiMoshi extends MoshiMoshiAbstract {
 
     protected sessionManager = this.injector.get(SessionManagerService);
     protected db = this.injector.get(Request)
 
-    constructor(private baseUrl: string, @Optional() protected  injector: Injector) {
+    constructor(private auth: AuthenticatorImpl, @Optional() protected  injector: Injector) {
         super();
     }
 

@@ -1,8 +1,8 @@
 import { Router } from "@angular/router";
-import { SessionManagerService } from "../storage/session-manager.service";
-import { Authenticator } from "./Authenticator";
+import { SessionManagerService } from "../lib/storage/session-manager.service";
+import { Authenticator } from "../lib/authenticator/Authenticator";
 import { Injector } from "@angular/core";
-import { EndPoints } from "../entities/Endpoints";
+import { EndPoints } from "../lib/entities/Endpoints";
 
 export class AuthenticatorImpl extends Authenticator {
 
