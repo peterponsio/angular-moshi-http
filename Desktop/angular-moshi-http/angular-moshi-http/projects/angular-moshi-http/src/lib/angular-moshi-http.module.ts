@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { AngularMoshiHttpComponent } from './angular-moshi-http.component';
 import { InterceptorsModule } from './interceptors/interceptors.module';
 import { AuthenticatorImpl } from './authenticator/AuthenticatorImpl';
+import { Request } from './http/request';
 
 
 
@@ -16,7 +17,8 @@ import { AuthenticatorImpl } from './authenticator/AuthenticatorImpl';
     AngularMoshiHttpComponent
   ],
   providers: [
-    { provide: AuthenticatorImpl, useFactory: AuthenticatorImpl} 
+    Request,
+    //{ provide: AuthenticatorImpl, useFactory: AuthenticatorImpl} 
   ]
 })
 export class AngularMoshiHttpModule { }

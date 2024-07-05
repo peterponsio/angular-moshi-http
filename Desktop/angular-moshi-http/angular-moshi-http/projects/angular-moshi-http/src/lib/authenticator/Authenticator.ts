@@ -1,6 +1,6 @@
-export abstract class Authenticator {
-    abstract getNewToken(parameters: unknown): void
-    abstract getCurrentToken(): String
-    abstract isLogged(): Boolean
-    abstract logout(): void
+export interface Authenticator {
+    getNewToken(parameters: unknown): void
+    getCurrentToken(): String
+    isLogged(): Boolean
+    logout(): void
 } 

@@ -1,10 +1,10 @@
 import { Router } from "@angular/router";
 import { SessionManagerService } from "../storage/session-manager.service";
 import { Authenticator } from "./Authenticator";
-import { Injector } from "@angular/core";
+import { Injector, Optional } from "@angular/core";
 import { EndPoints } from "../entities/Endpoints";
 
-export class AuthenticatorImpl extends Authenticator {
+export class AuthenticatorImpl implements Authenticator {
 
     protected session = this.injector.get(SessionManagerService);
     protected router = this.injector.get(Router)
@@ -12,8 +12,7 @@ export class AuthenticatorImpl extends Authenticator {
     baseUrl: string = ""
     loginPath: string = "" 
     refreshPath: string = ""
-    constructor(endPoints: EndPoints, protected  injector: Injector){
-        super();
+    constructor(endPoints: EndPoints, @Optional() protected  injector: Injector){
         this.baseUrl = endPoints.baseUrl
         this.loginPath = endPoints.loginPath
         this.refreshPath = endPoints.refreshPath
