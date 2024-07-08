@@ -8,3 +8,5 @@ export * from './lib/angular-moshi-http.module';
 export * from './lib/MoshiMoshi';
 export * from './lib/authenticator/AuthenticatorImpl'
 export * from './lib/entities/Endpoints'
+export * from './lib/http/request'
+export * from './lib/moshi.module'

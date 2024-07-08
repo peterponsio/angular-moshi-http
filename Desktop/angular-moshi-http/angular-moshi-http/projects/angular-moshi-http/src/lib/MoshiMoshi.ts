@@ -1,11 +1,12 @@
 import { Observable, map, of, tap, throwError } from 'rxjs';
-import { Injector, Optional } from '@angular/core';
+import { Injectable, Injector, Optional } from '@angular/core';
 import { MoshiMoshiAbstract } from './MoshiMoshiAbstract';
 import { RequestModel } from './entities/Request';
 import { SessionManagerService } from './storage/session-manager.service';
 import { Request } from './http/request';
 import { AuthenticatorImpl } from './authenticator/AuthenticatorImpl';
 
+@Injectable()
 export class MoshiMoshi extends MoshiMoshiAbstract {
 
     protected sessionManager = this.injector.get(SessionManagerService);
