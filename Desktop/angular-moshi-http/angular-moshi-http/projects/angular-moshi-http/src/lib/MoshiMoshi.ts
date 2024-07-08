@@ -1,5 +1,5 @@
-import { Observable, map, of, tap, throwError } from 'rxjs';
-import { Injectable, Injector, Optional } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { Injectable, Injector } from '@angular/core';
 import { MoshiMoshiAbstract } from './MoshiMoshiAbstract';
 import { RequestModel } from './entities/Request';
 import { SessionManagerService } from './storage/session-manager.service';
@@ -9,11 +9,20 @@ import { AuthenticatorImpl } from './authenticator/AuthenticatorImpl';
 @Injectable()
 export class MoshiMoshi extends MoshiMoshiAbstract {
 
-    protected sessionManager = this.injector.get(SessionManagerService);
-    protected db = this.injector.get(Request)
+    protected sessionManager!: SessionManagerService; 
+    protected db!: Request 
 
-    constructor(@Optional() protected auth: AuthenticatorImpl, @Optional() protected  injector: Injector) {
+    constructor() {
         super();
+    }
+
+    override initializeMoshi(auth: AuthenticatorImpl, injector: Injector){
+        try {
+            this.sessionManager = injector.get(SessionManagerService)
+            this.db = injector.get(Request)
+        } catch (error) {
+            throwError((err: unknown) => this.handler(err)) 
+        }
     }
 
     override load(httpRequest: RequestModel): Observable<unknown> {
@@ -41,3 +50,4 @@ export class MoshiMoshi extends MoshiMoshiAbstract {
 
     
 }
+
